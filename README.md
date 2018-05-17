@@ -10,3 +10,7 @@
 
 
 制作全景图教程 http://vr.sina.com.cn/news/js/2017-08-18/doc-ifykcppx9208605.shtml
+
+
+
+Threejs全景参考 中 https://threejs.org/examples/?q=panorama
