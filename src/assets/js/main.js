@@ -15,8 +15,9 @@ import css from '../css/css.css';
 // import Js Plugins/Entities
 
 // import THREE from 'three';
-import DeviceOrientationControls from 'three/examples/js/controls/DeviceOrientationControls.js';
+
 import CanvasRenderer from 'three/examples/js/renderers/CanvasRenderer.js';
+import DeviceOrientationControls from 'three/examples/js/controls/DeviceOrientationControls.js';
 import Projector from 'three/examples/js/renderers/Projector.js';
 
 window.h5 = {
@@ -64,7 +65,24 @@ window.h5 = {
             geometry.scale(-1, 1, 1);
             mesh = new THREE.Mesh(geometry, materials);
             scene.add(mesh);
-            renderer = new THREE.CanvasRenderer();
+
+            function webglAvailable() {
+                try {
+                    var canvas = document.createElement('canvas');
+                    return !!(window.WebGLRenderingContext && (
+                        canvas.getContext('webgl') ||
+                        canvas.getContext('experimental-webgl')));
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            if (webglAvailable()) {
+                renderer = new THREE.WebGLRenderer();
+            } else {
+
+                renderer = new THREE.CanvasRenderer();
+            }
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(window.innerWidth, window.innerHeight);
             container.appendChild(renderer.domElement);
