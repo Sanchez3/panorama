@@ -187,14 +187,15 @@ window.h5 = {
 
         function animate() {
             requestAnimationFrame(animate);
-            controls.update();
-            renderer.render(scene, camera);
+
+            update();
         }
 
         function update() {
-            // if (isUserInteracting === false) {
-            //     lon += 0.1;
-            // }
+            if (isUserInteracting === false) {
+                controls.update();
+            }
+            controls.update();
             // lat = Math.max(-85, Math.min(85, lat));
             // phi = THREE.Math.degToRad(90 - lat);
             // theta = THREE.Math.degToRad(lon);
@@ -286,7 +287,7 @@ window.h5 = {
     init: function() {
         var that = this;
         that.cssInit().eventInit();
-        that.initCss3DR();
+        that.initWebGLR();
     }
 };
 
