@@ -33,7 +33,7 @@
 
 ### 实测
 
-[**Canvas渲染**](https://threejs.org/docs/#examples/renderers/CanvasRenderer)，即`new THREE.CanvasRenderer();` ，利用 Canvas 2D Api。**手机端**效果极其不好，fps不到10。
+[**Canvas渲染**](https://threejs.org/docs/#examples/renderers/CanvasRenderer)，即`new THREE.CanvasRenderer();` ，利用 Canvas 2D Api。**手机端**效果极其不好，iphone6s fps不到10。
 
 [**WebGL渲染**](https://threejs.org/docs/#api/renderers/WebGLRenderer)，即`new THREE.WebGLRenderer();`，利用 GPU渲染的着色器。**手机端**性能不错，iphone6s fps30左右，无明显卡顿。
 
