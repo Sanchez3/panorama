@@ -32,6 +32,7 @@
         "animate.css": "^3.5.2",
         "gsap": "^1.20.3",
         "howler": "^2.0.5",
+        "stats.js": "^0.17.0",
         "three": "^0.92.0"
     },
     "scripts": {
