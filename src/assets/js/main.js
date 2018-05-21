@@ -15,12 +15,14 @@ import css from '../css/css.css';
 // import Js Plugins/Entities
 
 // import THREE from 'three';
+import DeviceOrientationControls from 'three/examples/js/controls/DeviceOrientationControls.js';
 import CanvasRenderer from 'three/examples/js/renderers/CanvasRenderer.js';
 import Projector from 'three/examples/js/renderers/Projector.js';
 
 window.h5 = {
     initThree: function() {
         var camera, scene, renderer;
+        var controls;
         var texture_placeholder,
             isUserInteracting = false,
             onMouseDownMouseX = 0,
@@ -32,6 +34,7 @@ window.h5 = {
             phi = 0,
             theta = 0,
             target = new THREE.Vector3();
+
         init();
         animate();
 
@@ -41,6 +44,7 @@ window.h5 = {
             var container, mesh;
             container = document.getElementById('container');
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
+            controls = new THREE.DeviceOrientationControls(camera);
             scene = new THREE.Scene();
             texture_placeholder = document.createElement('canvas');
             texture_placeholder.width = 128;
@@ -94,20 +98,21 @@ window.h5 = {
 
         function animate() {
             requestAnimationFrame(animate);
-            update();
+            controls.update();
+            renderer.render(scene, camera);
         }
 
         function update() {
-            if (isUserInteracting === false) {
-                lon += 0.1;
-            }
-            lat = Math.max(-85, Math.min(85, lat));
-            phi = THREE.Math.degToRad(90 - lat);
-            theta = THREE.Math.degToRad(lon);
-            target.x = 500 * Math.sin(phi) * Math.cos(theta);
-            target.y = 500 * Math.cos(phi);
-            target.z = 500 * Math.sin(phi) * Math.sin(theta);
-            camera.lookAt(target);
+            // if (isUserInteracting === false) {
+            //     lon += 0.1;
+            // }
+            // lat = Math.max(-85, Math.min(85, lat));
+            // phi = THREE.Math.degToRad(90 - lat);
+            // theta = THREE.Math.degToRad(lon);
+            // target.x = 500 * Math.sin(phi) * Math.cos(theta);
+            // target.y = 500 * Math.cos(phi);
+            // target.z = 500 * Math.sin(phi) * Math.sin(theta);
+            // camera.lookAt(target);
             renderer.render(scene, camera);
         }
 
@@ -198,10 +203,12 @@ window.h5 = {
 
 window.onload = function() {
     window.h5.init();
-    // showStats();
 };
 
 
+
+import Stats from 'stats.js';
+showStats();
 
 function showStats() {
     var stats = new Stats();
