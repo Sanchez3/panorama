@@ -108,6 +108,7 @@ window.h5 = {
             phi = 0,
             theta = 0,
             target = new THREE.Vector3();
+        var onPointerDownPointerX, onPointerDownPointerY, onPointerDownLon, onPointerDownLat;
 
         init();
         animate();
@@ -157,14 +158,64 @@ window.h5 = {
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(window.innerWidth, window.innerHeight);
             container.appendChild(renderer.domElement);
-            // document.addEventListener('mousedown', onDocumentMouseDown, false);
-            // document.addEventListener('mousemove', onDocumentMouseMove, false);
-            // document.addEventListener('mouseup', onDocumentMouseUp, false);
-            // document.addEventListener('wheel', onDocumentMouseWheel, false);
-            // document.addEventListener('touchstart', onDocumentTouchStart, false);
-            // document.addEventListener('touchmove', onDocumentTouchMove, false);
+            document.addEventListener('mousedown', onDocumentMouseDown, false);
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            document.addEventListener('mouseup', onDocumentMouseUp, false);
+            document.addEventListener('wheel', onDocumentMouseWheel, false);
+            document.addEventListener('touchstart', onDocumentTouchStart, false);
+            document.addEventListener('touchmove', onDocumentTouchMove, false);
+            document.addEventListener('touchend', onDocumentTouchEnd, false);
             //
             window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onDocumentMouseDown(event) {
+            event.preventDefault();
+            isUserInteracting = true;
+            onPointerDownPointerX = event.clientX;
+            onPointerDownPointerY = event.clientY;
+            onPointerDownLon = lon;
+            onPointerDownLat = lat;
+        }
+
+        function onDocumentMouseMove(event) {
+            if (isUserInteracting === true) {
+                lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
+                lat = (event.clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
+            }
+        }
+
+        function onDocumentMouseUp(event) {
+            isUserInteracting = false;
+        }
+
+        function onDocumentMouseWheel(event) {
+            var fov = camera.fov + event.deltaY * 0.05;
+            camera.fov = THREE.Math.clamp(fov, 10, 75);
+            camera.updateProjectionMatrix();
+        }
+
+        function onDocumentTouchStart(event) {
+            if (event.touches.length == 1) {
+                event.preventDefault();
+                isUserInteracting = true;
+                onPointerDownPointerX = event.touches[0].pageX;
+                onPointerDownPointerY = event.touches[0].pageY;
+                onPointerDownLon = lon;
+                onPointerDownLat = lat;
+            }
+        }
+
+        function onDocumentTouchMove(event) {
+            if (event.touches.length == 1) {
+                event.preventDefault();
+                lon = (onPointerDownPointerX - event.touches[0].pageX) * 0.1 + onPointerDownLon;
+                lat = (event.touches[0].pageY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
+            }
+        }
+
+        function onDocumentTouchEnd(event) {
+            isUserInteracting = false;
         }
 
         function onWindowResize() {
@@ -194,15 +245,18 @@ window.h5 = {
         function update() {
             if (isUserInteracting === false) {
                 controls.update();
+            } else {
+                console.log('Looks')
+                lat = Math.max(-85, Math.min(85, lat));
+                phi = THREE.Math.degToRad(90 - lat);
+                theta = THREE.Math.degToRad(lon);
+                target.x = 500 * Math.sin(phi) * Math.cos(theta);
+                target.y = 500 * Math.cos(phi);
+                target.z = 500 * Math.sin(phi) * Math.sin(theta);
+                camera.lookAt(target);
             }
-            controls.update();
-            // lat = Math.max(-85, Math.min(85, lat));
-            // phi = THREE.Math.degToRad(90 - lat);
-            // theta = THREE.Math.degToRad(lon);
-            // target.x = 500 * Math.sin(phi) * Math.cos(theta);
-            // target.y = 500 * Math.cos(phi);
-            // target.z = 500 * Math.sin(phi) * Math.sin(theta);
-            // camera.lookAt(target);
+            // controls.update();
+
             renderer.render(scene, camera);
         }
 
