@@ -30,10 +30,12 @@
     "dependencies": {
         "@fdaciuk/ajax": "^2.3.0",
         "animate.css": "^3.5.2",
+        "figlet": "^1.2.0",
         "gsap": "^1.20.3",
         "howler": "^2.0.5",
         "stats.js": "^0.17.0",
-        "three": "^0.92.0"
+        "three": "^0.92.0",
+        "whatwg-fetch": "^2.0.4"
     },
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
