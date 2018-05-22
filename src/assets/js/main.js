@@ -12,6 +12,7 @@
 // import animate_css from 'animate.css/animate.min.css';
 import css from '../css/css.css';
 
+
 // import Js Plugins/Entities
 
 // import THREE from 'three';
@@ -19,6 +20,17 @@ import CSS3DRenderer from 'three/examples/js/renderers/CSS3DRenderer.js';
 import CanvasRenderer from 'three/examples/js/renderers/CanvasRenderer.js';
 import DeviceOrientationControls from 'three/examples/js/controls/DeviceOrientationControls.js';
 import Projector from 'three/examples/js/renderers/Projector.js';
+import 'whatwg-fetch';
+import figlet from 'figlet';
+figlet.defaults({ fontPath: "assets/fonts" });
+figlet('Panorama', function(err, text) {
+    if (err) {
+        console.log('something went wrong...');
+        console.dir(err);
+        return;
+    }
+    console.log(text);
+});
 
 window.h5 = {
     initCss3DR: function() {
