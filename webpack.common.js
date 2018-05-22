@@ -91,6 +91,11 @@ module.exports = {
             to: path.resolve(__dirname, "dist/assets/img")
 
         }]),
+        new CopyWebpackPlugin([{
+            from: path.resolve(__dirname, "src/assets/fonts"),
+            to: path.resolve(__dirname, "dist/assets/fonts")
+
+        }]),
         new MiniCssExtractPlugin({
             filename: 'assets/css/[name].[chunkhash].min.css',
             chunkFilename: 'assets/css/[name].[chunkhash].css'
