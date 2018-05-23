@@ -14,12 +14,14 @@ import css from '../css/css.css';
 
 
 // import Js Plugins/Entities
+// import './entities/orienter.js'
 
 // import THREE from 'three';
 import CSS3DRenderer from 'three/examples/js/renderers/CSS3DRenderer.js';
 import CanvasRenderer from 'three/examples/js/renderers/CanvasRenderer.js';
-import DeviceOrientationControls from 'three/examples/js/controls/DeviceOrientationControls.js';
+import DeviceOrientationControls from './entities/DeviceOrientationControls.js';
 import Projector from 'three/examples/js/renderers/Projector.js';
+// import OrbitControls from 'three/js/controls/OrbitControls.js';
 import 'whatwg-fetch';
 import figlet from 'figlet';
 figlet.defaults({ fontPath: "assets/fonts" });
@@ -170,61 +172,61 @@ window.h5 = {
             renderer.setPixelRatio(window.devicePixelRatio);
             renderer.setSize(window.innerWidth, window.innerHeight);
             container.appendChild(renderer.domElement);
-            document.addEventListener('mousedown', onDocumentMouseDown, false);
-            document.addEventListener('mousemove', onDocumentMouseMove, false);
-            document.addEventListener('mouseup', onDocumentMouseUp, false);
-            document.addEventListener('wheel', onDocumentMouseWheel, false);
-            document.addEventListener('touchstart', onDocumentTouchStart, false);
-            document.addEventListener('touchmove', onDocumentTouchMove, false);
-            document.addEventListener('touchend', onDocumentTouchEnd, false);
+            // document.addEventListener('mousedown', onDocumentMouseDown, false);
+            // document.addEventListener('mousemove', onDocumentMouseMove, false);
+            // document.addEventListener('mouseup', onDocumentMouseUp, false);
+            // document.addEventListener('wheel', onDocumentMouseWheel, false);
+            // document.addEventListener('touchstart', onDocumentTouchStart, false);
+            // document.addEventListener('touchmove', onDocumentTouchMove, false);
+            // document.addEventListener('touchend', onDocumentTouchEnd, false);
             //
             window.addEventListener('resize', onWindowResize, false);
         }
 
-        function onDocumentMouseDown(event) {
-            event.preventDefault();
-            isUserInteracting = true;
-            onPointerDownPointerX = event.clientX;
-            onPointerDownPointerY = event.clientY;
-            onPointerDownLon = lon;
-            onPointerDownLat = lat;
-        }
+        // function onDocumentMouseDown(event) {
+        //     event.preventDefault();
+        //     isUserInteracting = true;
+        //     onPointerDownPointerX = event.clientX;
+        //     onPointerDownPointerY = event.clientY;
+        //     onPointerDownLon = lon;
+        //     onPointerDownLat = lat;
+        // }
 
-        function onDocumentMouseMove(event) {
-            if (isUserInteracting === true) {
-                lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
-                lat = (event.clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
-            }
-        }
+        // function onDocumentMouseMove(event) {
+        //     if (isUserInteracting === true) {
+        //         lon = (onPointerDownPointerX - event.clientX) * 0.1 + onPointerDownLon;
+        //         lat = (event.clientY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
+        //     }
+        // }
 
-        function onDocumentMouseUp(event) {
-            isUserInteracting = false;
-        }
+        // function onDocumentMouseUp(event) {
+        //     isUserInteracting = false;
+        // }
 
-        function onDocumentMouseWheel(event) {
-            var fov = camera.fov + event.deltaY * 0.05;
-            camera.fov = THREE.Math.clamp(fov, 10, 75);
-            camera.updateProjectionMatrix();
-        }
+        // function onDocumentMouseWheel(event) {
+        //     var fov = camera.fov + event.deltaY * 0.05;
+        //     camera.fov = THREE.Math.clamp(fov, 10, 75);
+        //     camera.updateProjectionMatrix();
+        // }
 
-        function onDocumentTouchStart(event) {
-            if (event.touches.length == 1) {
-                event.preventDefault();
-                isUserInteracting = true;
-                onPointerDownPointerX = event.touches[0].pageX;
-                onPointerDownPointerY = event.touches[0].pageY;
-                onPointerDownLon = lon;
-                onPointerDownLat = lat;
-            }
-        }
+        // function onDocumentTouchStart(event) {
+        //     if (event.touches.length == 1) {
+        //         event.preventDefault();
+        //         isUserInteracting = true;
+        //         onPointerDownPointerX = event.touches[0].pageX;
+        //         onPointerDownPointerY = event.touches[0].pageY;
+        //         onPointerDownLon = lon;
+        //         onPointerDownLat = lat;
+        //     }
+        // }
 
-        function onDocumentTouchMove(event) {
-            if (event.touches.length == 1) {
-                event.preventDefault();
-                lon = (onPointerDownPointerX - event.touches[0].pageX) * 0.1 + onPointerDownLon;
-                lat = (event.touches[0].pageY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
-            }
-        }
+        // function onDocumentTouchMove(event) {
+        //     if (event.touches.length == 1) {
+        //         event.preventDefault();
+        //         lon = (onPointerDownPointerX - event.touches[0].pageX) * 0.1 + onPointerDownLon;
+        //         lat = (event.touches[0].pageY - onPointerDownPointerY) * 0.1 + onPointerDownLat;
+        //     }
+        // }
 
         function onDocumentTouchEnd(event) {
             isUserInteracting = false;
