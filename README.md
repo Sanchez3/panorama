@@ -14,6 +14,7 @@
 - Threejs 全景参考 中 https://threejs.org/examples/?q=panorama
 
   - [css3d-engine](https://github.com/shrekshrek/css3d-engine) Threejs的3D核心类库
+  - [DeviceOrientationControls解析](https://juejin.im/entry/5933ce66a22b9d0058e381b0) Threejs的DeviceOrientationControls
 
 - [Pannellum](https://pannellum.org/)
 
