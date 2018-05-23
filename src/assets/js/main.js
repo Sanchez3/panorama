@@ -14,7 +14,7 @@ import css from '../css/css.css';
 
 
 // import Js Plugins/Entities
-// import './entities/orienter.js'
+import './entities/orienter.js'
 
 // import THREE from 'three';
 import CSS3DRenderer from 'three/examples/js/renderers/CSS3DRenderer.js';
@@ -132,6 +132,14 @@ window.h5 = {
             container = document.getElementById('container');
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
             controls = new THREE.DeviceOrientationControls(camera);
+
+            // var g = new Orienter();
+            // g.init();
+
+            // g.onOrient=function(obj){
+            //     console.log(obj.a)
+            // }
+
             scene = new THREE.Scene();
             texture_placeholder = document.createElement('canvas');
             texture_placeholder.width = 128;
@@ -257,19 +265,19 @@ window.h5 = {
         }
 
         function update() {
-            if (isUserInteracting === false) {
-                controls.update();
-            } else {
-                console.log('Looks')
-                lat = Math.max(-85, Math.min(85, lat));
-                phi = THREE.Math.degToRad(90 - lat);
-                theta = THREE.Math.degToRad(lon);
-                target.x = 500 * Math.sin(phi) * Math.cos(theta);
-                target.y = 500 * Math.cos(phi);
-                target.z = 500 * Math.sin(phi) * Math.sin(theta);
-                camera.lookAt(target);
-            }
-            // controls.update();
+            // if (isUserInteracting === false) {
+            //     // controls.update();
+            // } else {
+            //     console.log('Looks')
+            //     lat = Math.max(-85, Math.min(85, lat));
+            //     phi = THREE.Math.degToRad(90 - lat);
+            //     theta = THREE.Math.degToRad(lon);
+            //     target.x = 500 * Math.sin(phi) * Math.cos(theta);
+            //     target.y = 500 * Math.cos(phi);
+            //     target.z = 500 * Math.sin(phi) * Math.sin(theta);
+            //     camera.lookAt(target);
+            // }
+            controls.update();
 
             renderer.render(scene, camera);
         }
