@@ -10,9 +10,12 @@
 ### 技术要点
 
 - [ ] [Three.js: rotate camera with both touch and device orientation](https://stackoverflow.com/questions/35283320/three-js-rotate-camera-with-both-touch-and-device-orientation)
+
 - [x] [制作全景图教程](http://vr.sina.com.cn/news/js/2017-08-18/doc-ifykcppx9208605.shtml)
-      - [x] Ps 3D图层
-      - [x] Ps 2D图层，利用Ps插件 [Flexify2](http://www.flamingpear.com/flexify-2.html) 转为全景图
+
+      ​- Ps 3D图层
+
+      - Ps 2D图层，利用Ps插件 [Flexify2](http://www.flamingpear.com/flexify-2.html) 转为全景图
 
 
 ### JS插件：
