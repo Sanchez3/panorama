@@ -9,8 +9,7 @@
 
 ### 技术要点
 
-- [Three.js: rotate camera with both touch and device orientation](https://stackoverflow.com/questions/35283320/three-js-rotate-camera-with-both-touch-and-device-orientation)
-
+- [Three.js: rotate camera with both touch and device orientation](https://stackoverflow.com/questions/35283320/three-js-rotate-camera-with-both-touch-and-device-orientation)  [OrbitControls and DeviceOrientationControls](https://github.com/mrdoob/three.js/issues/9047)
 - [制作全景图教程](http://vr.sina.com.cn/news/js/2017-08-18/doc-ifykcppx9208605.shtml)
 
   - Ps 3D图层
