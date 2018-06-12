@@ -20,9 +20,10 @@ import CSS3DRenderer from 'three/examples/js/renderers/CSS3DRenderer.js';
 import CanvasRenderer from 'three/examples/js/renderers/CanvasRenderer.js';
 import DeviceOrientationControls from './entities/DeviceOrientationControls.js';
 import Projector from 'three/examples/js/renderers/Projector.js';
-import OrbitControls from 'three/examples/js/controls/OrbitControls.js';
+// import OrbitControls from 'three/examples/js/controls/OrbitControls.js';
 import 'whatwg-fetch';
 import figlet from 'figlet';
+import AlloyTouch from'alloytouch';
 figlet.defaults({ fontPath: "assets/fonts" });
 figlet('Panorama', function(err, text) {
     if (err) {
@@ -69,16 +70,22 @@ window.h5 = {
             container.appendChild(renderer.domElement);
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-            camera.position.set(  0, 100, 100 );
-            scene.add(camera);
-            orbitcontrols = new THREE.OrbitControls(camera, renderer.domElement);
-            orbitcontrols.update();
+            // camera.position.set(0, 0, 0);
+            // scene.add(camera);
+
+             controls = new THREE.DeviceOrientationControls(camera);
+
+
+            // orbitcontrols = new THREE.OrbitControls(camera, renderer.domElement);
+            // orbitcontrols.update();
+            // orbitcontrols.target.set(0, 0, 0);
+            // orbitcontrols.reset();
             // var cube = new THREE.Object3D();
             // scene.add(cube);
 
             // orbitcontrols.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-            // orbitcontrols.dampingFactor = 0.5;
-            orbitcontrols.panSpeed=0.1;
+            // orbitcontrols.dampingFactor = 0.05;
+            // orbitcontrols.panSpeed=0.07;
 
             texture_placeholder = document.createElement('canvas');
             texture_placeholder.width = 128;
@@ -99,8 +106,17 @@ window.h5 = {
             mesh = new THREE.Mesh(geometry, materials);
             scene.add(mesh);
 
-            controls = new THREE.DeviceOrientationControls(mesh);
+           
 
+              new AlloyTouch({
+                touch: renderer.domElement,
+                vertical: false,
+                bindSelf: true,
+                target: mesh.rotation,
+                property: "y",
+                factor: 0.08,
+                moveFactor: 0.01
+            })
 
 
             function webglAvailable() {
