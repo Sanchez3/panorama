@@ -23,7 +23,7 @@ import Projector from 'three/examples/js/renderers/Projector.js';
 // import OrbitControls from 'three/examples/js/controls/OrbitControls.js';
 import 'whatwg-fetch';
 import figlet from 'figlet';
-import AlloyTouch from'alloytouch';
+import AlloyTouch from 'alloytouch';
 figlet.defaults({ fontPath: "assets/fonts" });
 figlet('Panorama', function(err, text) {
     if (err) {
@@ -37,7 +37,15 @@ figlet('Panorama', function(err, text) {
 window.h5 = {
     initWebGLR: function() {
         var camera, scene, renderer;
+        var mesh;
+        var targetRotation = 0;
+        var targetRotationOnMouseDown = 0;
         var controls, orbitcontrols;
+        var mouseX = 0;
+        var mouseXOnMouseDown = 0;
+        var windowHalfX = window.innerWidth / 2;
+        var windowHalfY = window.innerHeight / 2;
+
         var texture_placeholder,
             isUserInteracting = false,
             onMouseDownMouseX = 0,
@@ -55,7 +63,7 @@ window.h5 = {
         animate();
 
         function init() {
-            var container, mesh;
+            var container;
             container = document.getElementById('container');
 
             if (webglAvailable()) {
@@ -70,18 +78,8 @@ window.h5 = {
             container.appendChild(renderer.domElement);
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-            // camera.position.set(0, 0, 0);
-            // scene.add(camera);
+            scene.add(camera)
 
-             controls = new THREE.DeviceOrientationControls(camera);
-
-
-            // orbitcontrols = new THREE.OrbitControls(camera, renderer.domElement);
-            // orbitcontrols.update();
-            // orbitcontrols.target.set(0, 0, 0);
-            // orbitcontrols.reset();
-            // var cube = new THREE.Object3D();
-            // scene.add(cube);
 
             // orbitcontrols.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
             // orbitcontrols.dampingFactor = 0.05;
@@ -106,17 +104,7 @@ window.h5 = {
             mesh = new THREE.Mesh(geometry, materials);
             scene.add(mesh);
 
-           
-
-              new AlloyTouch({
-                touch: renderer.domElement,
-                vertical: false,
-                bindSelf: true,
-                target: mesh.rotation,
-                property: "y",
-                factor: 0.08,
-                moveFactor: 0.01
-            })
+            controls = new THREE.DeviceOrientationControls(camera);
 
 
             function webglAvailable() {
@@ -130,9 +118,55 @@ window.h5 = {
                 }
             }
 
-
+            document.addEventListener('mousedown', onDocumentMouseDown, false);
+            document.addEventListener('touchstart', onDocumentTouchStart, false);
+            document.addEventListener('touchmove', onDocumentTouchMove, false);
 
             window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onDocumentMouseDown(event) {
+            event.preventDefault();
+            
+            
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            document.addEventListener('mouseup', onDocumentMouseUp, false);
+            document.addEventListener('mouseout', onDocumentMouseOut, false);
+            mouseXOnMouseDown = event.clientX - windowHalfX;
+            targetRotationOnMouseDown = targetRotation;
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseX = event.clientX - windowHalfX;
+            targetRotation = targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02;
+        }
+
+        function onDocumentMouseUp(event) {
+            document.removeEventListener('mousemove', onDocumentMouseMove, false);
+            document.removeEventListener('mouseup', onDocumentMouseUp, false);
+            document.removeEventListener('mouseout', onDocumentMouseOut, false);
+        }
+
+        function onDocumentMouseOut(event) {
+            document.removeEventListener('mousemove', onDocumentMouseMove, false);
+            document.removeEventListener('mouseup', onDocumentMouseUp, false);
+            document.removeEventListener('mouseout', onDocumentMouseOut, false);
+        }
+
+        function onDocumentTouchStart(event) {
+            if (event.touches.length === 1) {
+                event.preventDefault();
+                mouseXOnMouseDown = event.touches[0].pageX - windowHalfX;
+                targetRotationOnMouseDown = targetRotation;
+            }
+        }
+
+        function onDocumentTouchMove(event) {
+            if (event.touches.length === 1) {
+                event.preventDefault();
+                mouseX = event.touches[0].pageX - windowHalfX;
+                targetRotation = targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.05;
+            }
         }
 
         function onWindowResize() {
@@ -161,6 +195,7 @@ window.h5 = {
         }
 
         function render() {
+            mesh.rotation.y += (targetRotation - mesh.rotation.y) * 0.05;
 
             renderer.render(scene, camera);
         }
