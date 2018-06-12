@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@fdaciuk/ajax": "^2.3.0",
+        "alloytouch": "^0.2.5",
         "animate.css": "^3.5.2",
         "figlet": "^1.2.0",
         "gsap": "^1.20.3",
