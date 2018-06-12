@@ -78,7 +78,7 @@ window.h5 = {
             container.appendChild(renderer.domElement);
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-            scene.add(camera)
+            scene.add(camera);
 
 
             // orbitcontrols.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
@@ -126,9 +126,14 @@ window.h5 = {
         }
 
         function onDocumentMouseDown(event) {
-            event.preventDefault();
-            
-            
+            if (event.cancelable) {
+                // 判断默认行为是否已经被禁用
+                if (!event.defaultPrevented) {
+                    event.preventDefault();
+                }
+            }
+
+
             document.addEventListener('mousemove', onDocumentMouseMove, false);
             document.addEventListener('mouseup', onDocumentMouseUp, false);
             document.addEventListener('mouseout', onDocumentMouseOut, false);
@@ -155,7 +160,12 @@ window.h5 = {
 
         function onDocumentTouchStart(event) {
             if (event.touches.length === 1) {
-                event.preventDefault();
+               if (event.cancelable) {
+                // 判断默认行为是否已经被禁用
+                if (!event.defaultPrevented) {
+                    event.preventDefault();
+                }
+            }
                 mouseXOnMouseDown = event.touches[0].pageX - windowHalfX;
                 targetRotationOnMouseDown = targetRotation;
             }
@@ -163,7 +173,12 @@ window.h5 = {
 
         function onDocumentTouchMove(event) {
             if (event.touches.length === 1) {
-                event.preventDefault();
+               if (event.cancelable) {
+                // 判断默认行为是否已经被禁用
+                if (!event.defaultPrevented) {
+                    event.preventDefault();
+                }
+            }
                 mouseX = event.touches[0].pageX - windowHalfX;
                 targetRotation = targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.05;
             }
