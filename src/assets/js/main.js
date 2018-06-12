@@ -41,8 +41,14 @@ window.h5 = {
         var targetRotation = 0;
         var targetRotationOnMouseDown = 0;
         var controls, orbitcontrols;
-        var mouseX = 0;
-        var mouseXOnMouseDown = 0;
+        var mouseX = 0,
+            mouseY = 0;
+        var mouseXOnMouseDown = 0,
+            mouseYOnMouseDown = 0;
+        var targetRotationX = 0;
+        var targetRotationXOnMouseDown = 0;
+        var targetRotationY = 0;
+        var targetRotationYOnMouseDown = 0;
         var windowHalfX = window.innerWidth / 2;
         var windowHalfY = window.innerHeight / 2;
 
@@ -137,13 +143,18 @@ window.h5 = {
             document.addEventListener('mousemove', onDocumentMouseMove, false);
             document.addEventListener('mouseup', onDocumentMouseUp, false);
             document.addEventListener('mouseout', onDocumentMouseOut, false);
+            mouseYOnMouseDown = event.clientY - windowHalfY;
             mouseXOnMouseDown = event.clientX - windowHalfX;
-            targetRotationOnMouseDown = targetRotation;
+            targetRotationXOnMouseDown = targetRotationX;
+            targetRotationYOnMouseDown = targetRotationY;
         }
 
         function onDocumentMouseMove(event) {
+            mouseY = event.clientY - windowHalfY;
             mouseX = event.clientX - windowHalfX;
-            targetRotation = targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02;
+            targetRotationX = targetRotationXOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02;
+            targetRotationY = targetRotationYOnMouseDown - (mouseY - mouseYOnMouseDown) * 0.01;
+
         }
 
         function onDocumentMouseUp(event) {
@@ -160,27 +171,32 @@ window.h5 = {
 
         function onDocumentTouchStart(event) {
             if (event.touches.length === 1) {
-               if (event.cancelable) {
-                // 判断默认行为是否已经被禁用
-                if (!event.defaultPrevented) {
-                    event.preventDefault();
+                if (event.cancelable) {
+                    // 判断默认行为是否已经被禁用
+                    if (!event.defaultPrevented) {
+                        event.preventDefault();
+                    }
                 }
-            }
+                mouseYOnMouseDown = event.touches[0].pageY - windowHalfY;
                 mouseXOnMouseDown = event.touches[0].pageX - windowHalfX;
-                targetRotationOnMouseDown = targetRotation;
+                targetRotationXOnMouseDown = targetRotationX;
+                targetRotationYOnMouseDown = targetRotationY;
             }
         }
 
         function onDocumentTouchMove(event) {
             if (event.touches.length === 1) {
-               if (event.cancelable) {
-                // 判断默认行为是否已经被禁用
-                if (!event.defaultPrevented) {
-                    event.preventDefault();
+                if (event.cancelable) {
+                    // 判断默认行为是否已经被禁用
+                    if (!event.defaultPrevented) {
+                        event.preventDefault();
+                    }
                 }
-            }
+                mouseY = event.touches[0].pageY - windowHalfY;
                 mouseX = event.touches[0].pageX - windowHalfX;
-                targetRotation = targetRotationOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.05;
+                targetRotationX = targetRotationXOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02;
+                targetRotationY = targetRotationYOnMouseDown - (mouseY - mouseYOnMouseDown) * 0.01;
+
             }
         }
 
@@ -210,7 +226,11 @@ window.h5 = {
         }
 
         function render() {
-            mesh.rotation.y += (targetRotation - mesh.rotation.y) * 0.05;
+            targetRotationY = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotationY))
+            mesh.rotation.y += (targetRotationX - mesh.rotation.y) * 0.05;
+            console.log(targetRotationY, mesh.rotation.x);
+            mesh.rotation.x += (targetRotationY - mesh.rotation.x) * 0.05;
+
 
             renderer.render(scene, camera);
         }
