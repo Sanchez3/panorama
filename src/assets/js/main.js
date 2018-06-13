@@ -20,7 +20,7 @@ import CSS3DRenderer from 'three/examples/js/renderers/CSS3DRenderer.js';
 import CanvasRenderer from 'three/examples/js/renderers/CanvasRenderer.js';
 import DeviceOrientationControls from './entities/DeviceOrientationControls.js';
 import Projector from 'three/examples/js/renderers/Projector.js';
-// import OrbitControls from 'three/examples/js/controls/OrbitControls.js';
+import OrbitControls from 'three/examples/js/controls/OrbitControls.js';
 import 'whatwg-fetch';
 import figlet from 'figlet';
 figlet.defaults({ fontPath: "assets/fonts" });
@@ -34,6 +34,208 @@ figlet('Panorama', function(err, text) {
 });
 
 window.h5 = {
+    initWebGLR2: function() {
+        var camera, scene, renderer;
+        var mesh;
+        var targetRotation = 0;
+        var targetRotationOnMouseDown = 0;
+        var controls, orbitcontrols;
+        var mouseX = 0,
+            mouseY = 0;
+        var mouseXOnMouseDown = 0,
+            mouseYOnMouseDown = 0;
+        var targetRotationX = 0;
+        var targetRotationXOnMouseDown = 0;
+        var targetRotationY = 0;
+        var targetRotationYOnMouseDown = 0;
+        var windowHalfX = window.innerWidth / 2;
+        var windowHalfY = window.innerHeight / 2;
+
+        var texture_placeholder,
+            isUserInteracting = false,
+            onMouseDownMouseX = 0,
+            onMouseDownMouseY = 0,
+            lon = 90,
+            onMouseDownLon = 0,
+            lat = 0,
+            onMouseDownLat = 0,
+            phi = 0,
+            theta = 0,
+            target = new THREE.Vector3();
+        var onPointerDownPointerX, onPointerDownPointerY, onPointerDownLon, onPointerDownLat;
+
+        init();
+        animate();
+
+        function init() {
+            var container;
+            container = document.getElementById('container');
+
+            if (webglAvailable()) {
+                renderer = new THREE.WebGLRenderer();
+            } else {
+
+                renderer = new THREE.CanvasRenderer();
+            }
+            renderer.setPixelRatio(window.devicePixelRatio);
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            // container.appendChild(renderer.domElement);
+            container.appendChild(renderer.domElement);
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(90, window.innerWidth / window.innerHeight, 0.1, 300);
+            scene.add(camera);
+            camera.position.z = 0.01;
+
+            orbitcontrols = new THREE.OrbitControls( camera, renderer.domElement );
+            orbitcontrols.enableZoom = false;
+            orbitcontrols.enablePan = false;
+            orbitcontrols.enableDamping = true;
+            orbitcontrols.rotateSpeed = - 0.25;
+
+            texture_placeholder = document.createElement('canvas');
+            texture_placeholder.width = 128;
+            texture_placeholder.height = 128;
+            var context = texture_placeholder.getContext('2d');
+            context.fillStyle = 'rgb( 200, 200, 200 )';
+            context.fillRect(0, 0, texture_placeholder.width, texture_placeholder.height);
+            var materials = [
+                loadTexture('./assets/img/posx.jpg'), // right
+                loadTexture('./assets/img/negx.jpg'), // left
+                loadTexture('./assets/img/posy.jpg'), // top
+                loadTexture('./assets/img/negy.jpg'), // bottom
+                loadTexture('./assets/img/posz.jpg'), // back
+                loadTexture('./assets/img/negz.jpg') // front
+            ];
+            var geometry = new THREE.BoxGeometry(300, 300, 300, 7, 7, 7);
+            geometry.scale(-1, 1, 1);
+            mesh = new THREE.Mesh(geometry, materials);
+            scene.add(mesh);
+
+            controls = new THREE.DeviceOrientationControls(mesh);
+
+
+            function webglAvailable() {
+                try {
+                    var canvas = document.createElement('canvas');
+                    return !!(window.WebGLRenderingContext && (
+                        canvas.getContext('webgl') ||
+                        canvas.getContext('experimental-webgl')));
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            document.addEventListener('mousedown', onDocumentMouseDown, false);
+            document.addEventListener('touchstart', onDocumentTouchStart, false);
+            document.addEventListener('touchmove', onDocumentTouchMove, false);
+
+            window.addEventListener('resize', onWindowResize, false);
+        }
+
+        function onDocumentMouseDown(event) {
+            if (event.cancelable) {
+                // 判断默认行为是否已经被禁用
+                if (!event.defaultPrevented) {
+                    event.preventDefault();
+                }
+            }
+
+
+            document.addEventListener('mousemove', onDocumentMouseMove, false);
+            document.addEventListener('mouseup', onDocumentMouseUp, false);
+            document.addEventListener('mouseout', onDocumentMouseOut, false);
+            mouseYOnMouseDown = event.clientY - windowHalfY;
+            mouseXOnMouseDown = event.clientX - windowHalfX;
+            targetRotationXOnMouseDown = targetRotationX;
+            targetRotationYOnMouseDown = targetRotationY;
+        }
+
+        function onDocumentMouseMove(event) {
+            mouseY = event.clientY - windowHalfY;
+            mouseX = event.clientX - windowHalfX;
+            targetRotationX = targetRotationXOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02;
+            targetRotationY = targetRotationYOnMouseDown - (mouseY - mouseYOnMouseDown) * 0.01;
+
+        }
+
+        function onDocumentMouseUp(event) {
+            document.removeEventListener('mousemove', onDocumentMouseMove, false);
+            document.removeEventListener('mouseup', onDocumentMouseUp, false);
+            document.removeEventListener('mouseout', onDocumentMouseOut, false);
+        }
+
+        function onDocumentMouseOut(event) {
+            document.removeEventListener('mousemove', onDocumentMouseMove, false);
+            document.removeEventListener('mouseup', onDocumentMouseUp, false);
+            document.removeEventListener('mouseout', onDocumentMouseOut, false);
+        }
+
+        function onDocumentTouchStart(event) {
+            if (event.touches.length === 1) {
+                if (event.cancelable) {
+                    // 判断默认行为是否已经被禁用
+                    if (!event.defaultPrevented) {
+                        event.preventDefault();
+                    }
+                }
+                mouseYOnMouseDown = event.touches[0].pageY - windowHalfY;
+                mouseXOnMouseDown = event.touches[0].pageX - windowHalfX;
+                targetRotationXOnMouseDown = targetRotationX;
+                targetRotationYOnMouseDown = targetRotationY;
+            }
+        }
+
+        function onDocumentTouchMove(event) {
+            if (event.touches.length === 1) {
+                if (event.cancelable) {
+                    // 判断默认行为是否已经被禁用
+                    if (!event.defaultPrevented) {
+                        event.preventDefault();
+                    }
+                }
+                mouseY = event.touches[0].pageY - windowHalfY;
+                mouseX = event.touches[0].pageX - windowHalfX;
+                targetRotationX = targetRotationXOnMouseDown + (mouseX - mouseXOnMouseDown) * 0.02;
+                targetRotationY = targetRotationYOnMouseDown - (mouseY - mouseYOnMouseDown) * 0.01;
+
+            }
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function loadTexture(path) {
+            var texture = new THREE.Texture(texture_placeholder);
+            var material = new THREE.MeshBasicMaterial({ map: texture, overdraw: 0.5 });
+            var image = new Image();
+            image.onload = function() {
+                texture.image = this;
+                texture.needsUpdate = true;
+            };
+            image.src = path;
+            return material;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+            orbitcontrols.update(); // required when damping is enabled
+            controls.update();
+            render();
+        }
+
+        function render() {
+            targetRotationY = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotationY))
+            mesh.rotation.y += (targetRotationX - mesh.rotation.y) * 0.05;
+            console.log(targetRotationY, mesh.rotation.x);
+            mesh.rotation.x += (targetRotationY - mesh.rotation.x) * 0.05;
+
+
+            renderer.render(scene, camera);
+        }
+    },
     initWebGLR: function() {
         var camera, scene, renderer;
         var mesh;
@@ -387,7 +589,7 @@ window.h5 = {
     init: function() {
         var that = this;
         that.cssInit().eventInit();
-        that.initWebGLR();
+        that.initWebGLR2();
         // that.initCurve();
     }
 };
