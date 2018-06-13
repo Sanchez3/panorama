@@ -23,7 +23,6 @@ import Projector from 'three/examples/js/renderers/Projector.js';
 // import OrbitControls from 'three/examples/js/controls/OrbitControls.js';
 import 'whatwg-fetch';
 import figlet from 'figlet';
-import AlloyTouch from 'alloytouch';
 figlet.defaults({ fontPath: "assets/fonts" });
 figlet('Panorama', function(err, text) {
     if (err) {
