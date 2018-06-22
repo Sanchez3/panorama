@@ -53,3 +53,5 @@
 [高冷的WebGL](https://juejin.im/entry/591d0b4d128fe1005cf6d90b)
 
 [threeVR](https://github.com/richtr/threeVR)
+
+[3D图形:矩阵、欧拉角、四元数与方位的故事](https://www.jianshu.com/p/7a114062866e)
