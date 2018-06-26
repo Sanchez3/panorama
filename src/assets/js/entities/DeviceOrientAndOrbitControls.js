@@ -3,9 +3,10 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
     var scope = this;
 
     var touchX, touchY;
-    var lon = 90,
+    var lon = 0,
         lat = 0;
-
+    var sphericalDelta = new THREE.Spherical();
+    var spherical = new THREE.Spherical();
     this.object = object;
     this.object.rotation.reorder('YXZ');
 
@@ -35,8 +36,6 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
         var zee = new THREE.Vector3(0, 0, 1);
 
         var euler = new THREE.Euler();
-        var beuler = new THREE.Euler();
-        beuler.order = 'YXZ'
 
         var q0 = new THREE.Quaternion();
 
@@ -44,15 +43,16 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
         return function(quaternion, alpha, beta, gamma, orient) {
 
-            var b = new THREE.Vector3(lat, lon, 0);
+
+            spherical.theta += sphericalDelta.theta;
+            spherical.phi += sphericalDelta.phi;
+
+
+             sphericalDelta.set(0, 0, 0);
 
             euler.set(beta, alpha, -gamma, 'YXZ'); // 'ZXY' for the device, but 'YXZ' for us
 
-            beuler.setFromVector3(b);
 
-            euler.x += beuler.x;
-            euler.y += beuler.y;
-            euler.z += beuler.z;
             quaternion.setFromEuler(euler); // orient the device
 
             quaternion.multiply(q1); // camera looks out the back of the device, not the top
@@ -87,9 +87,9 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
             var touch = event.touches[0];
 
-            lon -= (touch.screenX - touchX) * 0.1;
+            lon -= (touch.screenX - touchX) * 2 * Math.PI / window.innerWidth;
 
-            lat += (touch.screenY - touchY) * 0.1;
+            lat += (touch.screenY - touchY) * 2 * Math.PI / window.innerHeight;
 
             touchX = touch.screenX;
 
