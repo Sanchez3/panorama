@@ -183,9 +183,7 @@ window.h5 = {
         function render() {
             targetRotationY = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, targetRotationY))
             mesh.rotation.y += (targetRotationX - mesh.rotation.y) * 0.05;
-
             mesh.rotation.x += (targetRotationY - mesh.rotation.x) * 0.05;
-
 
             renderer.render(scene, camera);
         }

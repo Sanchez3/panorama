@@ -3,11 +3,15 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
     var scope = this;
 
     var touchX, touchY;
-    var lon = 0,
-        lat = 0;
+
     var sphericalDelta = new THREE.Spherical();
+
     var spherical = new THREE.Spherical();
+
+    var  svector=new THREE.Vector3();
+
     this.object = object;
+
     this.object.rotation.reorder('YXZ');
 
     this.enabled = true;
@@ -43,17 +47,21 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
         return function(quaternion, alpha, beta, gamma, orient) {
 
-
             spherical.theta += sphericalDelta.theta;
+
             spherical.phi += sphericalDelta.phi;
 
+            svector.setFromSpherical(spherical);
 
-             sphericalDelta.set(0, 0, 0);
+            sphericalDelta.set(0, 0, 0);
 
             euler.set(beta, alpha, -gamma, 'YXZ'); // 'ZXY' for the device, but 'YXZ' for us
 
+            var evector=new THREE.Vector3();
+            
+            svector.applyEuler(euler.reorder('XYZ'));
 
-            quaternion.setFromEuler(euler); // orient the device
+            quaternion.setFromEuler(euler.setFromVector3(svector).reorder('YXZ')); // orient the device
 
             quaternion.multiply(q1); // camera looks out the back of the device, not the top
 
@@ -87,9 +95,9 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
             var touch = event.touches[0];
 
-            lon -= (touch.screenX - touchX) * 2 * Math.PI / window.innerWidth;
+            sphericalDelta.theta -= (touch.screenX - touchX) * 2 * Math.PI / window.innerWidth;
 
-            lat += (touch.screenY - touchY) * 2 * Math.PI / window.innerHeight;
+            sphericalDelta.phi += (touch.screenY - touchY) * 2 * Math.PI / window.innerHeight;
 
             touchX = touch.screenX;
 
@@ -118,6 +126,7 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
     this.disconnect = function() {
 
         window.removeEventListener('orientationchange', onScreenOrientationChangeEvent, false);
+
         window.removeEventListener('deviceorientation', onDeviceOrientationChangeEvent, false);
 
         scope.enabled = false;
