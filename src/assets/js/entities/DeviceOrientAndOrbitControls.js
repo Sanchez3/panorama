@@ -8,7 +8,11 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
     var spherical = new THREE.Spherical();
 
-    var  svector=new THREE.Vector3();
+    var svector = new THREE.Vector3();
+
+    var rotateStart = new THREE.Vector2();
+    var rotateEnd = new THREE.Vector2();
+    var rotateDelta = new THREE.Vector2();
 
     this.object = object;
 
@@ -18,6 +22,8 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
     this.deviceOrientation = {};
     this.screenOrientation = 0;
+
+    this.rotateSpeed = 1.0;
 
     this.alphaOffset = 0; // radians
 
@@ -57,8 +63,8 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
             euler.set(beta, alpha, -gamma, 'YXZ'); // 'ZXY' for the device, but 'YXZ' for us
 
-            var evector=new THREE.Vector3();
-            
+            var evector = new THREE.Vector3();
+
             svector.applyEuler(euler.reorder('XYZ'));
 
             quaternion.setFromEuler(euler.setFromVector3(svector).reorder('YXZ')); // orient the device
@@ -79,10 +85,7 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
             var touch = event.touches[0];
 
-            touchX = touch.screenX;
-
-            touchY = touch.screenY;
-
+            rotateStart.set(touch.pageX, touch.pageY);
         };
 
     }();
@@ -95,13 +98,16 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
             var touch = event.touches[0];
 
-            sphericalDelta.theta -= (touch.screenX - touchX) * 2 * Math.PI / window.innerWidth;
+            rotateEnd.set(touch.pageX, touch.pageY);
 
-            sphericalDelta.phi += (touch.screenY - touchY) * 2 * Math.PI / window.innerHeight;
+            rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(scope.rotateSpeed);
+            console.log(rotateDelta)
 
-            touchX = touch.screenX;
+            sphericalDelta.theta -= rotateDelta.x * 2 * Math.PI / window.innerWidth;
 
-            touchY = touch.screenY;
+            sphericalDelta.phi += rotateDelta.y * 2 * Math.PI / window.innerHeight;
+
+            rotateStart.copy(rotateEnd);
 
         };
 
