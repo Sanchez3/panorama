@@ -103,7 +103,7 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
             rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(scope.rotateSpeed);
             console.log(rotateDelta)
 
-            sphericalDelta.theta -= rotateDelta.x * 2 * Math.PI / window.innerWidth;
+            sphericalDelta.theta += rotateDelta.x * 2 * Math.PI / window.innerWidth;
 
             sphericalDelta.phi += rotateDelta.y * 2 * Math.PI / window.innerHeight;
 
