@@ -22,6 +22,7 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
     this.deviceOrientation = {};
     this.screenOrientation = 0;
+    this.deviceMotion = {};
 
     this.rotateSpeed = 1.0;
 
@@ -32,6 +33,12 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
         scope.deviceOrientation = event;
 
     };
+
+    var onDeviceMotionEvent = function(event) {
+
+        scope.deviceMotion = event;
+
+    }
 
     var onScreenOrientationChangeEvent = function() {
 
@@ -113,9 +120,13 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
     }();
 
+
+
     this.connect = function() {
 
         onScreenOrientationChangeEvent(); // run once on load
+
+        window.addEventListener('devicemotion', onDeviceMotionEvent, false);
 
         window.addEventListener('orientationchange', onScreenOrientationChangeEvent, false);
 
@@ -130,6 +141,8 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
     };
 
     this.disconnect = function() {
+
+        window.addEventListener('devicemotion', onDeviceMotionEvent, false);
 
         window.removeEventListener('orientationchange', onScreenOrientationChangeEvent, false);
 
