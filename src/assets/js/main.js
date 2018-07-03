@@ -19,7 +19,7 @@ import css from '../css/css.css';
 import CSS3DRenderer from 'three/examples/js/renderers/CSS3DRenderer.js';
 import CanvasRenderer from 'three/examples/js/renderers/CanvasRenderer.js';
 // import DeviceOrientationControls from './entities/DeviceOrientationControls.js';
-import DeviceOrientAndOrbitControls from './entities/DeviceOrientAndOrbitControls.js';
+import DeviceMotionAndOrbitControls from './entities/DeviceMotionAndOrbitControls.js';
 import Projector from 'three/examples/js/renderers/Projector.js';
 import OrbitControls from 'three/examples/js/controls/OrbitControls.js';
 import 'whatwg-fetch';
@@ -98,18 +98,18 @@ window.h5 = {
             context.fillStyle = 'rgb( 200, 200, 200 )';
             context.fillRect(0, 0, texture_placeholder.width, texture_placeholder.height);
             var materials = [
-                loadTexture('./assets/img/px.jpg'), // right
-                loadTexture('./assets/img/nx.jpg'), // left
-                loadTexture('./assets/img/py.jpg'), // top
-                loadTexture('./assets/img/ny.jpg'), // bottom
-                loadTexture('./assets/img/pz.jpg'), // back
-                loadTexture('./assets/img/nz.jpg') // front
+                loadTexture('./assets/img/posx.jpg'), // right
+                loadTexture('./assets/img/negx.jpg'), // left
+                loadTexture('./assets/img/posy.jpg'), // top
+                loadTexture('./assets/img/negy.jpg'), // bottom
+                loadTexture('./assets/img/posz.jpg'), // back
+                loadTexture('./assets/img/negz.jpg') // front
             ];
             var geometry = new THREE.BoxGeometry(300, 300, 300, 7, 7, 7);
             geometry.scale(-1, 1, 1);
             mesh = new THREE.Mesh(geometry, materials);
             scene.add(mesh);
-            controls = new THREE.DeviceOrientAndOrbitControls(camera);
+            controls = new THREE.DeviceMotionAndOrbitControls(camera);
             function webglAvailable() {
                 try {
                     var canvas = document.createElement('canvas');
