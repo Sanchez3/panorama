@@ -68,8 +68,6 @@ THREE.DeviceMotionAndOrbitControls = function(object) {
         var q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)); // - PI/2 around the x-axis
 
         return function(quaternion, alpha, beta, gamma, orient) {
-            console.log(spherical.phi + alpha)
-
             // θ  Left-right
             spherical.theta += (beta * 0.01 + sphericalDelta.theta);
             // φ  Up-down

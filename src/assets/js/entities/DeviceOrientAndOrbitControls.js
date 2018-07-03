@@ -108,7 +108,6 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
             rotateEnd.set(touch.pageX, touch.pageY);
 
             rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(scope.rotateSpeed);
-            console.log(rotateDelta)
 
             sphericalDelta.theta += rotateDelta.x * 2 * Math.PI / window.innerWidth;
 
@@ -126,8 +125,6 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
 
         onScreenOrientationChangeEvent(); // run once on load
 
-        window.addEventListener('devicemotion', onDeviceMotionEvent, false);
-
         window.addEventListener('orientationchange', onScreenOrientationChangeEvent, false);
 
         window.addEventListener('deviceorientation', onDeviceOrientationChangeEvent, false);
@@ -141,8 +138,6 @@ THREE.DeviceOrientAndOrbitControls = function(object) {
     };
 
     this.disconnect = function() {
-
-        window.addEventListener('devicemotion', onDeviceMotionEvent, false);
 
         window.removeEventListener('orientationchange', onScreenOrientationChangeEvent, false);
 
