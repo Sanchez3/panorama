@@ -19,9 +19,11 @@ import css from '../css/css.css';
 import CSS3DRenderer from 'three/examples/js/renderers/CSS3DRenderer.js';
 import CanvasRenderer from 'three/examples/js/renderers/CanvasRenderer.js';
 // import DeviceOrientationControls from './entities/DeviceOrientationControls.js';
-import DeviceMotionAndOrbitControls from './entities/DeviceMotionAndOrbitControls.js';
+// import DeviceMotionAndOrbitControls from './entities/DeviceMotionAndOrbitControls.js';
+import DeviceOrientAndOrbitControls from './entities/DeviceOrientAndOrbitControls.js';
+
 import Projector from 'three/examples/js/renderers/Projector.js';
-import OrbitControls from 'three/examples/js/controls/OrbitControls.js';
+// import OrbitControls from 'three/examples/js/controls/OrbitControls.js';
 import 'whatwg-fetch';
 import figlet from 'figlet';
 figlet.defaults({ fontPath: "assets/fonts" });
@@ -84,9 +86,10 @@ window.h5 = {
             container.appendChild(renderer.domElement);
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
-            scene.add(camera);
-
-
+            // scene.add(camera);
+            orbitcontrols = new THREE.DeviceOrientAndOrbitControls(camera, renderer.domElement);
+            camera.position.z = 0.01;
+            orbitcontrols.update();
             // orbitcontrols.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
             // orbitcontrols.dampingFactor = 0.05;
             // orbitcontrols.panSpeed=0.07;
@@ -109,7 +112,10 @@ window.h5 = {
             geometry.scale(-1, 1, 1);
             mesh = new THREE.Mesh(geometry, materials);
             scene.add(mesh);
-            controls = new THREE.DeviceMotionAndOrbitControls(camera);
+            // controls = new THREE.DeviceMotionAndOrbitControls(camera);
+
+
+
             function webglAvailable() {
                 try {
                     var canvas = document.createElement('canvas');
@@ -175,8 +181,8 @@ window.h5 = {
 
         function animate() {
             requestAnimationFrame(animate);
-            // orbitcontrols.update();
-            controls.update();
+            orbitcontrols.update();
+            // controls.update();
             render();
         }
 
