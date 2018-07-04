@@ -124,15 +124,15 @@ THREE.DeviceOrientAndOrbitControls = function(object, domElement) {
         var q0 = new THREE.Quaternion();
 
         var q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)); // - PI/2 around the x-axis
-
         //beta=beta-180;
         return function(quaternion, alpha, beta, gamma, orient) {
+
 
             euler.set(beta, alpha, -gamma, 'YXZ'); // 'ZXY' for the device, but 'YXZ' for us
 
             quaternion.setFromEuler(euler); // orient the device
 
-            quaternion.multiply(q1); // camera looks out the back of the device, not the top
+            // quaternion.multiply(q1); // camera looks out the back of the device, not the top
 
             quaternion.multiply(q0.setFromAxisAngle(zee, -orient)); // adjust for screen orientation
 
