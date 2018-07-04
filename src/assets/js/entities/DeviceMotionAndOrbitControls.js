@@ -146,6 +146,41 @@ THREE.DeviceMotionAndOrbitControls = function(object) {
 
     }();
 
+       var handleMouseDownRotate = function() {
+
+        return function(event) {
+
+            //console.log( 'handleMouseMoveRotate' );
+
+            rotateEnd.set(event.clientX, event.clientY);
+
+            rotateDelta.subVectors(rotateEnd, rotateStart).multiplyScalar(scope.rotateSpeed);
+
+            var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+
+            // rotating across whole screen goes 360 degrees around
+            rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth);
+
+            // rotating up and down along whole screen attempts to go 360, but limited to 180
+            rotateUp(2 * Math.PI * rotateDelta.y / element.clientHeight);
+
+            rotateStart.copy(rotateEnd);
+
+            scope.update();
+
+        };
+
+    }();
+
+    var handleMouseMoveRotate = function() {
+
+        return function(event) {
+
+            rotateStart.set( event.clientX, event.clientY );
+
+        };
+
+    }();
 
 
     this.connect = function() {
@@ -157,6 +192,13 @@ THREE.DeviceMotionAndOrbitControls = function(object) {
         document.addEventListener('touchstart', onDocumentTouchStart, { passive: false });
 
         document.addEventListener('touchmove', onDocumentTouchMove, { passive: false });
+
+        document.addEventListener('mousedown', handleMouseDownRotate);
+
+        document.addEventListener('mousemove', handleMouseMoveRotate);
+
+        document.addEventListener('mouseup', handleMouseUp);
+
 
         scope.enabled = true;
 
