@@ -1,13 +1,23 @@
 # Panorama全景
 
-### 方法
+## 实现
+
+### DeviceMotionAndOribitControls.js
+利用 [DeviceMotionEvent](https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent) 的 [DeviceMotionEvent.rotationRate](https://developer.mozilla.org/en-US/docs/Web/API/DeviceMotionEvent/rotationRate) ，加上 Touch交互。
+
+
+### DeviceOrientAndOribitControls.js
+基于 [OrbitControls](https://threejs.org/docs/index.html#examples/controls/OrbitControls) ，加上 [DeviceOrientation](https://developer.mozilla.org/zh-CN/docs/Web/Events/deviceorientation) ，但是目前存在问题万向节死锁（待解决）。
+
+
+## 方法
 
 - div + Css3 实现
   - 图片是围成了一个圆筒  参考 http://show.im20.com.cn/zwj/ 
   - 图片是分为了6张组成一个球 参考 https://threejs.org/examples/?q=pano#css3d_panorama_deviceorientation 
 - Canvas Webgl 参考 https://threejs.org/examples/?q=pano#canvas_geometry_panorama
 
-### 技术要点
+## 技术要点
 
 - [Three.js: rotate camera with both touch and device orientation](https://stackoverflow.com/questions/35283320/three-js-rotate-camera-with-both-touch-and-device-orientation) 
 - [OrbitControls and DeviceOrientationControls](https://github.com/mrdoob/three.js/issues/9047)
@@ -21,7 +31,7 @@
   - Ps 2D图层，利用Ps插件 [Flexify2](http://www.flamingpear.com/flexify-2.html) 转为全景图
 
 
-### JS插件：
+## JS插件：
 
 - Threejs 全景参考 中 https://threejs.org/examples/?q=panorama
 
@@ -31,14 +41,14 @@
 - [Pannellum](https://pannellum.org/)
 
 
-### 工具
+## 工具
 
 - 3D建模软件 [blender](https://www.blender.org/thanks/) Maya
 
 - 在线建模 [three.js / editor](https://threejs.org/editor/) [ThreeFab](http://blackjk3.github.io/threefab/)
 
 
-### 实测
+## 实测
 
 [**Canvas渲染**](https://threejs.org/docs/#examples/renderers/CanvasRenderer)，即`new THREE.CanvasRenderer();` ，利用 Canvas 2D Api。**手机端**效果极其不好，iphone6s fps不到10。
 
@@ -48,7 +58,7 @@
 
 
 
-### 参考
+## 参考
 
 [高冷的WebGL](https://juejin.im/entry/591d0b4d128fe1005cf6d90b)
 
