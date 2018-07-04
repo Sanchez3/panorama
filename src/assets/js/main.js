@@ -18,11 +18,12 @@ import css from '../css/css.css';
 // import THREE from 'three';
 import CSS3DRenderer from 'three/examples/js/renderers/CSS3DRenderer.js';
 import CanvasRenderer from 'three/examples/js/renderers/CanvasRenderer.js';
-// import DeviceOrientationControls from './entities/DeviceOrientationControls.js';
-// import DeviceMotionAndOrbitControls from './entities/DeviceMotionAndOrbitControls.js';
+
+import DeviceMotionAndOrbitControls from './entities/DeviceMotionAndOrbitControls.js';
 import DeviceOrientAndOrbitControls from './entities/DeviceOrientAndOrbitControls.js';
 
 import Projector from 'three/examples/js/renderers/Projector.js';
+// import DeviceOrientationControls from 'three/examples/js/controls/DeviceOrientationControls.js';
 // import OrbitControls from 'three/examples/js/controls/OrbitControls.js';
 import 'whatwg-fetch';
 import figlet from 'figlet';
@@ -87,12 +88,16 @@ window.h5 = {
             scene = new THREE.Scene();
             camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 1, 1100);
             // scene.add(camera);
+
+            // controls = new THREE.DeviceMotionAndOrbitControls(camera);
+            // controls.enableDamping = true;
+            
             orbitcontrols = new THREE.DeviceOrientAndOrbitControls(camera, renderer.domElement);
             camera.position.z = 0.01;
-            orbitcontrols.update();
-            // orbitcontrols.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
-            // orbitcontrols.dampingFactor = 0.05;
-            // orbitcontrols.panSpeed=0.07;
+            orbitcontrols.enableZoom = false;
+            orbitcontrols.enablePan = false;
+            orbitcontrols.enableDamping = true;
+            orbitcontrols.rotateSpeed = - 0.25;
 
             texture_placeholder = document.createElement('canvas');
             texture_placeholder.width = 128;
@@ -101,18 +106,18 @@ window.h5 = {
             context.fillStyle = 'rgb( 200, 200, 200 )';
             context.fillRect(0, 0, texture_placeholder.width, texture_placeholder.height);
             var materials = [
-                loadTexture('./assets/img/posx.jpg'), // right
-                loadTexture('./assets/img/negx.jpg'), // left
-                loadTexture('./assets/img/posy.jpg'), // top
-                loadTexture('./assets/img/negy.jpg'), // bottom
-                loadTexture('./assets/img/posz.jpg'), // back
-                loadTexture('./assets/img/negz.jpg') // front
+                loadTexture('./assets/img/p3/posx.jpg'), // right
+                loadTexture('./assets/img/p3/negx.jpg'), // left
+                loadTexture('./assets/img/p3/posy.jpg'), // top
+                loadTexture('./assets/img/p3/negy.jpg'), // bottom
+                loadTexture('./assets/img/p3/posz.jpg'), // back
+                loadTexture('./assets/img/p3/negz.jpg') // front
             ];
             var geometry = new THREE.BoxGeometry(300, 300, 300, 7, 7, 7);
             geometry.scale(-1, 1, 1);
             mesh = new THREE.Mesh(geometry, materials);
             scene.add(mesh);
-            // controls = new THREE.DeviceMotionAndOrbitControls(camera);
+            
 
 
 
@@ -127,7 +132,7 @@ window.h5 = {
                 }
             }
 
-            document.addEventListener('mousedown', onDocumentMouseDown, false);
+            // document.addEventListener('mousedown', onDocumentMouseDown, false);
             window.addEventListener('resize', onWindowResize, false);
         }
 
