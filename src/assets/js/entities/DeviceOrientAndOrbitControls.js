@@ -1,4 +1,3 @@
-
 /**
  * based on OribiControls.js
  */
@@ -172,146 +171,7 @@ THREE.DeviceOrientAndOrbitControls = function(object, domElement) {
         return euler;
     }
 
-    // this method is exposed, but perhaps it would be better if we can make it private...
-    this.update = function() {
 
-        var offset = new THREE.Vector3();
-
-        // so camera.up is the orbit axis
-        var quat = new THREE.Quaternion().setFromUnitVectors(object.up, new THREE.Vector3(0, 1, 0));
-        var quatInverse = quat.clone().inverse();
-
-        var lastPosition = new THREE.Vector3();
-        var lastQuaternion = new THREE.Quaternion();
-
-        return function update() {
-
-
-
-            var alpha = scope.deviceOrientation.alpha ? THREE.Math.degToRad(scope.deviceOrientation.alpha) : 0; // Z
-            var beta = scope.deviceOrientation.beta ? THREE.Math.degToRad(scope.deviceOrientation.beta) : 0; // X'
-            var gamma = scope.deviceOrientation.gamma ? THREE.Math.degToRad(scope.deviceOrientation.gamma) : 0; // Y''
-            var orient = scope.screenOrientation ? THREE.Math.degToRad(scope.screenOrientation) : 0; // O
-
-            var currentQ = new THREE.Quaternion().copy(scope.object.quaternion);
-
-            setObjectQuaternion(currentQ, alpha, beta, gamma, orient);
-            var currentAngle = Quat2Angle(currentQ.x, currentQ.y, currentQ.z, currentQ.w);
-            var radDeg = 180 / Math.PI;
-            // currentAngle.z = Left-right
-            // currentAngle.y = Up-down
-            rotateLeft((lastGamma - currentAngle.z) / 2);
-            lastGamma = currentAngle.z;
-            rotateUp(lastBeta - currentAngle.y);
-            lastBeta = currentAngle.y;
-
-
-
-
-            var position = scope.object.position;
-
-            offset.copy(position).sub(scope.target);
-
-            // rotate offset to "y-axis-is-up" space
-            offset.applyQuaternion(quat);
-
-            // angle from z-axis around y-axis
-            spherical.setFromVector3(offset);
-
-            if (scope.autoRotate && state === STATE.NONE) {
-
-                rotateLeft(getAutoRotationAngle());
-
-            }
-
-            spherical.theta += sphericalDelta.theta;
-            spherical.phi += sphericalDelta.phi;
-
-            // restrict theta to be between desired limits
-            spherical.theta = Math.max(scope.minAzimuthAngle, Math.min(scope.maxAzimuthAngle, spherical.theta));
-
-            // restrict phi to be between desired limits
-            spherical.phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, spherical.phi));
-
-            spherical.makeSafe();
-
-
-            spherical.radius *= scale;
-
-            // restrict radius to be between desired limits
-            spherical.radius = Math.max(scope.minDistance, Math.min(scope.maxDistance, spherical.radius));
-
-            // move target to panned location
-            scope.target.add(panOffset);
-
-            offset.setFromSpherical(spherical);
-
-            // rotate offset back to "camera-up-vector-is-up" space
-            offset.applyQuaternion(quatInverse);
-
-            position.copy(scope.target).add(offset);
-
-            scope.object.lookAt(scope.target);
-
-            if (scope.enableDamping === true) {
-
-                sphericalDelta.theta *= (1 - scope.dampingFactor);
-                sphericalDelta.phi *= (1 - scope.dampingFactor);
-
-                panOffset.multiplyScalar(1 - scope.dampingFactor);
-
-            } else {
-
-                sphericalDelta.set(0, 0, 0);
-
-                panOffset.set(0, 0, 0);
-
-            }
-
-            scale = 1;
-
-            // update condition is:
-            // min(camera displacement, camera rotation in radians)^2 > EPS
-            // using small-angle approximation cos(x/2) = 1 - x^2 / 8
-
-            if (zoomChanged ||
-                lastPosition.distanceToSquared(scope.object.position) > EPS ||
-                8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS) {
-
-                scope.dispatchEvent(changeEvent);
-
-                lastPosition.copy(scope.object.position);
-                lastQuaternion.copy(scope.object.quaternion);
-                zoomChanged = false;
-
-                return true;
-
-            }
-
-            return false;
-
-        };
-
-    }();
-
-    this.dispose = function() {
-
-        scope.domElement.removeEventListener('contextmenu', onContextMenu, false);
-        scope.domElement.removeEventListener('mousedown', onMouseDown, false);
-        scope.domElement.removeEventListener('wheel', onMouseWheel, false);
-
-        scope.domElement.removeEventListener('touchstart', onTouchStart, false);
-        scope.domElement.removeEventListener('touchend', onTouchEnd, false);
-        scope.domElement.removeEventListener('touchmove', onTouchMove, false);
-
-        document.removeEventListener('mousemove', onMouseMove, false);
-        document.removeEventListener('mouseup', onMouseUp, false);
-
-        window.removeEventListener('keydown', onKeyDown, false);
-
-        //scope.dispatchEvent( { type: 'dispose' } ); // should this be added here?
-
-    };
 
     //
     // internals
@@ -980,31 +840,203 @@ THREE.DeviceOrientAndOrbitControls = function(object, domElement) {
         scope.screenOrientation = window.orientation || 0;
     }
 
-    onScreenOrientationChangeEvent(); // run once on load
 
-    window.addEventListener('deviceorientation', onDeviceOrientationChangeEvent, false);
+    // onScreenOrientationChangeEvent(); // run once on load
 
-    window.addEventListener('orientationchange', onScreenOrientationChangeEvent, false);
-    //
+    // window.addEventListener('deviceorientation', onDeviceOrientationChangeEvent, false);
 
+    // window.addEventListener('orientationchange', onScreenOrientationChangeEvent, false);
 
-    scope.domElement.addEventListener('contextmenu', onContextMenu, false);
+    // scope.domElement.addEventListener('contextmenu', onContextMenu, false);
 
-    scope.domElement.addEventListener('mousedown', onMouseDown, false);
+    // scope.domElement.addEventListener('mousedown', onMouseDown, false);
 
-    scope.domElement.addEventListener('wheel', onMouseWheel, false);
+    // scope.domElement.addEventListener('wheel', onMouseWheel, false);
 
-    scope.domElement.addEventListener('touchstart', onTouchStart, { passive: false });
+    // scope.domElement.addEventListener('touchstart', onTouchStart, { passive: false });
 
-    scope.domElement.addEventListener('touchend', onTouchEnd, false);
+    // scope.domElement.addEventListener('touchend', onTouchEnd, false);
 
-    scope.domElement.addEventListener('touchmove', onTouchMove, { passive: false });
+    // scope.domElement.addEventListener('touchmove', onTouchMove, { passive: false });
 
-    window.addEventListener('keydown', onKeyDown, false);
+    // window.addEventListener('keydown', onKeyDown, false);
 
     // force an update at start
 
-    this.update();
+    // this method is exposed, but perhaps it would be better if we can make it private...
+    this.update = function() {
+
+        var offset = new THREE.Vector3();
+
+        // so camera.up is the orbit axis
+        var quat = new THREE.Quaternion().setFromUnitVectors(object.up, new THREE.Vector3(0, 1, 0));
+        var quatInverse = quat.clone().inverse();
+
+        var lastPosition = new THREE.Vector3();
+        var lastQuaternion = new THREE.Quaternion();
+
+        return function update() {
+            if (scope.enabled === false) return;
+
+            var device = scope.deviceOrientation;
+            if (device) {
+                var alpha = scope.deviceOrientation.alpha ? THREE.Math.degToRad(scope.deviceOrientation.alpha) : 0; // Z
+                var beta = scope.deviceOrientation.beta ? THREE.Math.degToRad(scope.deviceOrientation.beta) : 0; // X'
+                var gamma = scope.deviceOrientation.gamma ? THREE.Math.degToRad(scope.deviceOrientation.gamma) : 0; // Y''
+                var orient = scope.screenOrientation ? THREE.Math.degToRad(scope.screenOrientation) : 0; // O
+
+                var currentQ = new THREE.Quaternion().copy(scope.object.quaternion);
+
+                setObjectQuaternion(currentQ, alpha, beta, gamma, orient);
+                var currentAngle = Quat2Angle(currentQ.x, currentQ.y, currentQ.z, currentQ.w);
+                var radDeg = 180 / Math.PI;
+                // currentAngle.z = Left-right
+                // currentAngle.y = Up-down
+                rotateLeft((lastGamma - currentAngle.z) / 2);
+                lastGamma = currentAngle.z;
+
+                var upphi = Math.max(-Math.PI / 2, Math.min(Math.PI / 2, lastBeta - currentAngle.y));
+
+                rotateUp(lastBeta - currentAngle.y);
+                lastBeta = currentAngle.y;
+            }
+
+            var position = scope.object.position;
+
+            offset.copy(position).sub(scope.target);
+
+            // rotate offset to "y-axis-is-up" space
+            offset.applyQuaternion(quat);
+
+            // angle from z-axis around y-axis
+            spherical.setFromVector3(offset);
+
+            if (scope.autoRotate && state === STATE.NONE) {
+
+                rotateLeft(getAutoRotationAngle());
+
+            }
+
+            spherical.theta += sphericalDelta.theta;
+            spherical.phi += sphericalDelta.phi;
+
+            // restrict theta to be between desired limits
+            spherical.theta = Math.max(scope.minAzimuthAngle, Math.min(scope.maxAzimuthAngle, spherical.theta));
+
+            // restrict phi to be between desired limits
+            spherical.phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, spherical.phi));
+
+            spherical.makeSafe();
+
+
+            spherical.radius *= scale;
+
+            // restrict radius to be between desired limits
+            spherical.radius = Math.max(scope.minDistance, Math.min(scope.maxDistance, spherical.radius));
+
+            // move target to panned location
+            scope.target.add(panOffset);
+
+            offset.setFromSpherical(spherical);
+
+            // rotate offset back to "camera-up-vector-is-up" space
+            offset.applyQuaternion(quatInverse);
+
+            position.copy(scope.target).add(offset);
+
+            scope.object.lookAt(scope.target);
+
+            if (scope.enableDamping === true) {
+
+                sphericalDelta.theta *= (1 - scope.dampingFactor);
+                sphericalDelta.phi *= (1 - scope.dampingFactor);
+
+                panOffset.multiplyScalar(1 - scope.dampingFactor);
+
+            } else {
+
+                sphericalDelta.set(0, 0, 0);
+
+                panOffset.set(0, 0, 0);
+
+            }
+
+            scale = 1;
+
+            // update condition is:
+            // min(camera displacement, camera rotation in radians)^2 > EPS
+            // using small-angle approximation cos(x/2) = 1 - x^2 / 8
+
+            if (zoomChanged ||
+                lastPosition.distanceToSquared(scope.object.position) > EPS ||
+                8 * (1 - lastQuaternion.dot(scope.object.quaternion)) > EPS) {
+
+                scope.dispatchEvent(changeEvent);
+
+                lastPosition.copy(scope.object.position);
+                lastQuaternion.copy(scope.object.quaternion);
+                zoomChanged = false;
+
+                return true;
+
+            }
+
+            return false;
+
+        };
+    }();
+
+
+    this.connect = function() {
+
+        onScreenOrientationChangeEvent(); // run once on load
+
+        window.addEventListener('deviceorientation', onDeviceOrientationChangeEvent, false);
+
+        window.addEventListener('orientationchange', onScreenOrientationChangeEvent, false);
+
+        scope.domElement.addEventListener('contextmenu', onContextMenu, false);
+
+        scope.domElement.addEventListener('mousedown', onMouseDown, false);
+
+        scope.domElement.addEventListener('wheel', onMouseWheel, false);
+
+        scope.domElement.addEventListener('touchstart', onTouchStart, { passive: false });
+
+        scope.domElement.addEventListener('touchend', onTouchEnd, false);
+
+        scope.domElement.addEventListener('touchmove', onTouchMove, { passive: false });
+
+        window.addEventListener('keydown', onKeyDown, false);
+
+        scope.enabled = true;
+
+    };
+
+    this.disconnect = function() {
+        scope.domElement.removeEventListener('contextmenu', onContextMenu, false);
+        scope.domElement.removeEventListener('mousedown', onMouseDown, false);
+        scope.domElement.removeEventListener('wheel', onMouseWheel, false);
+
+        scope.domElement.removeEventListener('touchstart', onTouchStart, false);
+        scope.domElement.removeEventListener('touchend', onTouchEnd, false);
+        scope.domElement.removeEventListener('touchmove', onTouchMove, false);
+
+        document.removeEventListener('mousemove', onMouseMove, false);
+        document.removeEventListener('mouseup', onMouseUp, false);
+
+        window.removeEventListener('keydown', onKeyDown, false);
+
+        scope.enabled = false;
+    };
+
+    this.dispose = function() {
+        scope.disconnect();
+    };
+
+    this.connect();
+
+    // this.update();
 
 };
 
