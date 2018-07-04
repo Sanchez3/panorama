@@ -14,11 +14,16 @@ THREE.DeviceMotionAndOrbitControls = function(object) {
     var rotateStart = new THREE.Vector2(0, 0);
     var rotateEnd = new THREE.Vector2(0, 0);
     var rotateDelta = new THREE.Vector2(0, 0);
-    console.log(rotateDelta)
 
     this.object = object;
 
     this.object.rotation.reorder('YXZ');
+
+
+    // Set to true to enable damping (inertia)
+    // If damping is enabled, you must call controls.update() in your animation loop
+    this.enableDamping = false;
+    this.dampingFactor = 0.9;
 
     this.enabled = true;
 
@@ -68,12 +73,26 @@ THREE.DeviceMotionAndOrbitControls = function(object) {
         var q1 = new THREE.Quaternion(-Math.sqrt(0.5), 0, 0, Math.sqrt(0.5)); // - PI/2 around the x-axis
 
         return function(quaternion, alpha, beta, gamma, orient) {
+
+
+
             // θ  Left-right
             spherical.theta += (beta * 0.01 + sphericalDelta.theta);
             // φ  Up-down
             spherical.phi += (alpha * 0.01 + sphericalDelta.phi);
 
-            sphericalDelta.set(0, 0, 0);
+            if (scope.enableDamping === true) {
+
+                sphericalDelta.theta *= (1 - scope.dampingFactor);
+                sphericalDelta.phi *= (1 - scope.dampingFactor);
+
+            } else {
+
+                sphericalDelta.set(0, 0, 0);
+
+
+            }
+
 
 
             spherical.phi = Math.max(scope.minPolarAngle, Math.min(scope.maxPolarAngle, spherical.phi));
@@ -135,10 +154,6 @@ THREE.DeviceMotionAndOrbitControls = function(object) {
 
         window.addEventListener('devicemotion', onDeviceMotionChangeEvent, false);
 
-        // window.addEventListener('orientationchange', onScreenOrientationChangeEvent, false);
-
-        // window.addEventListener('deviceorientation', onDeviceOrientationChangeEvent, false);
-
         document.addEventListener('touchstart', onDocumentTouchStart, { passive: false });
 
         document.addEventListener('touchmove', onDocumentTouchMove, { passive: false });
@@ -150,10 +165,6 @@ THREE.DeviceMotionAndOrbitControls = function(object) {
     this.disconnect = function() {
 
         window.removeEventListener('devicemotion', onDeviceMotionChangeEvent, false);
-
-        // window.removeEventListener('orientationchange', onScreenOrientationChangeEvent, false);
-
-        // window.removeEventListener('deviceorientation', onDeviceOrientationChangeEvent, false);
 
         scope.enabled = false;
 
