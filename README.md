@@ -11,7 +11,7 @@
 
 ### DeviceOrientationControls.js  + [Photo Sphere Viewer](https://github.com/mistic100/Photo-Sphere-Viewer)
 
-利用 `DeviceOrientationControls.js` 完成陀螺仪转动 `Photo Sphere Viewer` 完成touch交互 [demo](https://csgo.wanmei.com/csgoanniversay/) 
+利用 `DeviceOrientationControls.js` 完成陀螺仪转动 `Photo Sphere Viewer` 完成touch交互(但是无法上下交互) [demo](https://csgo.wanmei.com/csgoanniversay/) 
 
 
 ## 方法
