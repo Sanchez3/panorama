@@ -9,6 +9,10 @@
 ### DeviceOrientAndOribitControls.js
 基于 [OrbitControls](https://threejs.org/docs/index.html#examples/controls/OrbitControls) ，加上 [DeviceOrientation](https://developer.mozilla.org/zh-CN/docs/Web/Events/deviceorientation) ，但是目前存在问题万向节死锁（待解决）。
 
+### DeviceOrientationControls.js  + [Photo Sphere Viewer](https://github.com/mistic100/Photo-Sphere-Viewer)
+
+利用 `DeviceOrientationControls.js` 完成陀螺仪转动 `Photo Sphere Viewer` 完成touch交互 [demo](https://csgo.wanmei.com/csgoanniversay/) 
+
 
 ## 方法
 
