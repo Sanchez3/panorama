@@ -19,7 +19,7 @@ import css from '../css/css.css';
 import CSS3DRenderer from 'three/examples/js/renderers/CSS3DRenderer.js';
 import CanvasRenderer from 'three/examples/js/renderers/CanvasRenderer.js';
 
-import DeviceMotionAndOrbitControls from './entities/DeviceMotionAndOrbitControls.js';
+// import DeviceMotionAndOrbitControls from './entities/DeviceMotionAndOrbitControls.js';
 import DeviceOrientAndOrbitControls from './entities/DeviceOrientAndOrbitControls.js';
 
 import Projector from 'three/examples/js/renderers/Projector.js';
