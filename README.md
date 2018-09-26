@@ -17,7 +17,7 @@
 ## 方法
 
 - div + Css3 实现
-  - 图片是围成了一个圆筒  参考 http://show.im20.com.cn/zwj/ 
+  - 图片是围成了一个圆筒  参考 http://show.im20.com.cn/zwj/   http://shrek.imdevsh.com/demo/kfc/
   - 图片是分为了6张组成一个球 参考 https://threejs.org/examples/?q=pano#css3d_panorama_deviceorientation 
 - Canvas Webgl 参考 https://threejs.org/examples/?q=pano#canvas_geometry_panorama
 
