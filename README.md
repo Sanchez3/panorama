@@ -22,6 +22,8 @@
 - Canvas Webgl 参考 https://threejs.org/examples/?q=pano#canvas_geometry_panorama
 
 ## 技术要点
+> 重力传感器和方向传感器都是派生传感器。重力传感器基于加速度传感器；方向传感器主要基于陀螺仪和磁力计，但主要还是基于陀螺仪。
+>
 
 - [Three.js: rotate camera with both touch and device orientation](https://stackoverflow.com/questions/35283320/three-js-rotate-camera-with-both-touch-and-device-orientation) 
 - [OrbitControls and DeviceOrientationControls](https://github.com/mrdoob/three.js/issues/9047)
